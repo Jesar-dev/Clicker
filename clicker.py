@@ -6,6 +6,7 @@ FPS = 30
 RADIUS_CIRCLE = 50
 # Создаём окно
 pygame.init()
+# Устанавливаем ширину и высоту окна
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Super Clicker")
 
