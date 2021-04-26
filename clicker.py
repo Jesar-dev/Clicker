@@ -1,19 +1,68 @@
 import pygame
+from Point import Point
 
-HEIGHT = 480
-WIDTH = 360
+
+HEIGHT_WINDOW = 480
+WIDTH_WINDOW = 360
 FPS = 30
 RADIUS_CIRCLE = 50
+
+ 
 # Создаём окно
 pygame.init()
 # Устанавливаем ширину и высоту окна
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH_WINDOW, HEIGHT_WINDOW))
 pygame.display.set_caption("Super Clicker")
 
-clock = pygame.time.Clock()
+
 # Скорость и количество очков
 speed = 0
 score = 0
+
+# def decresse_score(val)
+# 	score -= val if score >= accelerations[name_of_acc][2]
+
+# def increase_speed(val)
+
+
+def check_accelerators(name_of_acc, score, speed):
+	"""
+	name_of_acc - название ускорителя (string)
+	Проверка при нажатии на ускоритель, есть ли необходимое количество очков на покупку
+	в случае удачи отнять необходимое количество очков и добавить скорость производства
+	"""
+	if score >= accelerations[name_of_acc][2]:
+		score -= accelerations[name_of_acc][2]
+		accelerations[name_of_acc][0] += 1
+		speed += accelerations[name_of_acc][1]
+	return [score, speed]
+
+def rect_accelerators(left_upper_corner, width, height, name_of_acc):
+	"""
+	left_upper_corner - координаты точки левого угла прямоугольника (объект класса Point)
+	width - ширина прямоугольника (int)
+	height - высота прямоугольника (int)
+	name_of_acc - название ускорителя (String)
+	Рисует прямоугольник и заполняет его информацией об ускорителе
+	"""
+	pygame.draw.rect(screen, (0, 100, 0), 
+		             (left_upper_corner.x, left_upper_corner.y, width, height), width=1)
+	# Создаём строки для ускорителя
+	Accelerator = f2.render("{0}: {1}".format(name_of_acc,
+		accelerations[name_of_acc][0]), True, (0, 100, 0))
+	Accelerator_Cost = f2.render("Cost: {0}".format(
+		accelerations[name_of_acc][2]), True, (0, 100, 0))
+	Accelerator_Speed = f2.render("Speed: {0}".format(
+		accelerations[name_of_acc][1]), True, (0, 100, 0))
+	# Вставляем строки в наш прямоугольник по координатам в прямоугольнике
+	screen.blit(Accelerator, (left_upper_corner.x + 5, left_upper_corner.y + 5))
+	screen.blit(Accelerator_Cost, (left_upper_corner.x + 5, left_upper_corner.y + 20))
+	screen.blit(Accelerator_Speed, (left_upper_corner.x + 5, left_upper_corner.y + 35))
+
+
+
+clock = pygame.time.Clock()
+
 
 f1 = pygame.font.Font(None, 36)
 f2 = pygame.font.Font(None, 22)
@@ -54,7 +103,7 @@ while game_running:
 				score += 1
 				# Рисуем получившийся круг
 				pygame.draw.circle(screen, (255, 0, 0),
-									(WIDTH//2, HEIGHT//2), RADIUS_CIRCLE)
+									(WIDTH_WINDOW//2, HEIGHT_WINDOW//2), RADIUS_CIRCLE)
 				# Обновляем экран
 				pygame.display.update()
 		# Обрабатываем отпускание клавиши
@@ -65,7 +114,7 @@ while game_running:
 				RADIUS_CIRCLE += 5
 				# Рисуем получившийся круг
 				pygame.draw.circle(screen, (255, 0, 0),
-									(WIDTH//2, HEIGHT//2), RADIUS_CIRCLE)
+									(WIDTH_WINDOW//2, HEIGHT_WINDOW//2), RADIUS_CIRCLE)
 				# Обновляем экран
 				pygame.display.update()
 		# Обрабатываем нажатие на кнопку мыши
@@ -73,34 +122,26 @@ while game_running:
 			# Проверяем что нажата левая кнопка мыши
 			if event.button == 1:
 				# Проверяем по координатам нажатия 0 - по ширине 1 - по длине
-				if (event.pos[0] >= WIDTH - 120 and event.pos[0] <= WIDTH):
-					if (event.pos[1] >= 100 and event.pos[1] <= 150):
-						# Проверяем наличие очков на покупку ускорителя
-						if (score >= accelerations["Schoolboy"][2]):
-							# Уменьшаем количество очков на стоимость ускорителя
-							score -= accelerations["Schoolboy"][2]
-							# Увеличиваем количество ускорителя
-							accelerations["Schoolboy"][0] += 1
-							# Увеличиваем общую скорость
-							speed += accelerations["Schoolboy"][1]
-					if (event.pos[1] >= 155 and event.pos[1] <= 205):
-						if (score >= accelerations["Teacher"][2]):
-							score -= accelerations["Teacher"][2]
-							accelerations["Teacher"][0] += 1
-							speed += accelerations["Teacher"][1]
-					if (event.pos[1] >= 210 and event.pos[1] <= 260):
-						if (score >= accelerations["Director"][2]):
-							score -= accelerations["Director"][2]
-							accelerations["Director"][0] += 1
-							speed += accelerations["Director"][1]
-					if (event.pos[1] >= 265 and event.pos[1] <= 315):
-						if (score >= accelerations["Einstein"][2]):
-							score -= accelerations["Einstein"][2]
-							accelerations["Einstein"][0] += 1
-							speed += accelerations["Einstein"][1]
+				if event.pos[0] >= WIDTH_WINDOW - 120 and event.pos[0] <= WIDTH_WINDOW:
+					if event.pos[1] >= 100 and event.pos[1] <= 150:
+						score_and_speed = check_accelerators("Schoolboy", score, speed)
+						score = score_and_speed[0]
+						speed = score_and_speed[1]
+					if event.pos[1] >= 155 and event.pos[1] <= 205:
+						score_and_speed = check_accelerators("Teacher", score, speed)
+						score = score_and_speed[0]
+						speed = score_and_speed[1]
+					if event.pos[1] >= 210 and event.pos[1] <= 260:
+						score_and_speed = check_accelerators("Director", score, speed)
+						score = score_and_speed[0]
+						speed = score_and_speed[1]
+					if event.pos[1] >= 265 and event.pos[1] <= 315:
+						score_and_speed = check_accelerators("Einstein", score, speed)
+						score = score_and_speed[0]
+						speed = score_and_speed[1]
 	# Прибавляем время
 	time_elapsed_since_last_action += dt
-	if (time_elapsed_since_last_action >= 3):
+	if time_elapsed_since_last_action >= 3:
 		# Прибавляем к очкам нашу скорость
 		score += speed
 		time_elapsed_since_last_action = 0
@@ -111,66 +152,31 @@ while game_running:
 	Speed = f1.render("Your speed is: {0}".format(str(speed)),
 					  True, (255, 255, 255))
 
-	# Создаём прямоугольник для первого ускорителя
-	pygame.draw.rect(screen, (0, 100, 0), 
-		             (WIDTH - 120, 100, 120, 50), width=1)
-	# Создаём строки для первого ускорителя
-	Schoolboy = f2.render("Schoolboy: {0}".format(
-		accelerations["Schoolboy"][0]), True, (0, 100, 0))
-	Schoolboy_Cost = f2.render("Cost: {0}".format(
-		accelerations["Schoolboy"][2]), True, (0, 100, 0))
-	Schoolboy_Speed = f2.render("Speed: {0}".format(
-		accelerations["Schoolboy"][1]), True, (0, 100, 0))
-	# Вставляем строки в наш прямоугольник по координатам на экране
-	screen.blit(Schoolboy, (WIDTH - 115, 105))
-	screen.blit(Schoolboy_Cost, (WIDTH - 115, 120))
-	screen.blit(Schoolboy_Speed, (WIDTH - 115, 135))
+	# Создаём прямоугольник с первым ускорителем
+	left_upper_corner_rect = Point(WIDTH_WINDOW - 120, 100)
+	width_rect = 120
+	height_rect = 50
+	rect_accelerators(left_upper_corner_rect, width_rect, height_rect, "Schoolboy")
 
-	# Аналогично с первым ускорителем
-	pygame.draw.rect(screen, (0, 100, 0), 
-		             (WIDTH - 120, 155, 120, 50), width=1)
-	Teacher = f2.render("Teacher: {0}".format(
-		accelerations["Teacher"][0]), True, (0, 100, 0))
-	Teacher_Cost = f2.render("Cost: {0}".format(
-		accelerations["Teacher"][2]), True, (0, 100, 0))
-	Teacher_Speed = f2.render("Speed: {0}".format(
-		accelerations["Teacher"][1]), True, (0, 100, 0))
-	screen.blit(Teacher, (WIDTH - 115, 160))
-	screen.blit(Teacher_Cost, (WIDTH - 115, 175))
-	screen.blit(Teacher_Speed, (WIDTH - 115, 190))
+	# Со вторым ускорителем
+	left_upper_corner_rect = Point(WIDTH_WINDOW - 120, 155)
+	rect_accelerators(left_upper_corner_rect, width_rect, height_rect, "Teacher")
 
-	# Аналогично
-	pygame.draw.rect(screen, (0, 100, 0), 
-		             (WIDTH - 120, 210, 120, 50), width=1)
-	Director = f2.render("Director: {0}".format(
-		accelerations["Director"][0]), True, (0, 100, 0))
-	Director_Cost = f2.render("Cost: {0}".format(
-		accelerations["Director"][2]), True, (0, 100, 0))
-	Director_Speed = f2.render("Speed: {0}".format(
-		accelerations["Director"][1]), True, (0, 100, 0))
-	screen.blit(Director, (WIDTH - 115, 215))
-	screen.blit(Director_Cost, (WIDTH - 115, 230))
-	screen.blit(Director_Speed, (WIDTH - 115, 245))
+	# Третий ускоритель
+	left_upper_corner_rect = Point(WIDTH_WINDOW - 120, 210)
+	rect_accelerators(left_upper_corner_rect, width_rect, height_rect, "Director")
 
-	# Аналогично
-	pygame.draw.rect(screen, (0, 100, 0), 
-		             (WIDTH - 120, 265, 120, 50), width=1)
-	Einstein = f2.render("Einstein: {0}".format(
-		accelerations["Einstein"][0]), True, (0, 100, 0))
-	Einstein_Cost = f2.render("Cost: {0}".format(
-		accelerations["Einstein"][2]), True, (0, 100, 0))
-	Einstein_Speed = f2.render("Speed: {0}".format(
-		accelerations["Einstein"][1]), True, (0, 100, 0))
-	screen.blit(Einstein, (WIDTH - 115, 270))
-	screen.blit(Einstein_Cost, (WIDTH - 115, 285))
-	screen.blit(Einstein_Speed, (WIDTH - 115, 300))
+	# Аналогично 4 ускоритель
+	left_upper_corner_rect = Point(WIDTH_WINDOW-120, 265)
+	rect_accelerators(left_upper_corner_rect, width_rect, height_rect, "Einstein")
 
 	# Рисуем на экране текст с очками и скоростью
 	screen.blit(Score, (70, 50))
 	screen.blit(Speed, (70, 20))
+
 	# Рисуем наш круг
 	pygame.draw.circle(screen, (255, 0, 0),
-						(WIDTH//2, HEIGHT//2), RADIUS_CIRCLE)
+						(WIDTH_WINDOW//2, HEIGHT_WINDOW//2), RADIUS_CIRCLE)
 
 	pygame.display.flip()
 
