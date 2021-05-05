@@ -32,4 +32,3 @@ def rect_accelerators(accelerations, f2, screen,
                                    left_upper_corner.y + 20))
     screen.blit(Accelerator_Speed, (left_upper_corner.x + 5,
                                     left_upper_corner.y + 35))
-

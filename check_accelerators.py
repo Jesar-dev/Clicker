@@ -14,4 +14,3 @@ def check_accelerators(accelerations, name_of_acc, score, speed):
         accelerations[name_of_acc][0] += 1
         speed += accelerations[name_of_acc][1]
     return [score, speed]
-
