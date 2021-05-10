@@ -1,7 +1,7 @@
-def check_accelerators(accelerations, name_of_acc, score, speed):
+def check_accelerators(accelerations, name_of_accelerator, score, speed):
     """
     accelerations - словарь ускорителей
-    name_of_acc - название ускорителя (string)
+    name_of_accelerator - название ускорителя (string)
     score - количество очков
     speed - текущая скорость
     Проверка при нажатии на ускоритель,
@@ -9,8 +9,8 @@ def check_accelerators(accelerations, name_of_acc, score, speed):
     в случае удачи отнять необходимое количество очков
       и добавить скорость производства
     """
-    if score >= accelerations[name_of_acc][2]:
-        score -= accelerations[name_of_acc][2]
-        accelerations[name_of_acc][0] += 1
-        speed += accelerations[name_of_acc][1]
+    if score >= accelerations[name_of_accelerator]["cost"]:
+        score -= accelerations[name_of_accelerator]["cost"]
+        accelerations[name_of_accelerator]["amount"] += 1
+        speed += accelerations[name_of_accelerator]["speed"]
     return [score, speed]

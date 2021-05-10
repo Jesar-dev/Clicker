@@ -55,31 +55,32 @@ class event_checker:
             pygame.display.update()
 
     # Проверка нажатия на кнопку мыши
-    def event_mousebuttondown(self, button, pos):
+    def event_mousebuttondown(self, button, position):
         # Нажатие на левую кнопку мыши
         if button == 1:
             # Проверяем по координатам нажатия 0 - по ширине 1 - по длине
-            x = pos[0]
+            x = position[0]
+            y = position[1]
             if x >= param.WIDTH_WINDOW - 120 and x <= param.WIDTH_WINDOW:
                 score_and_speed = [param.score, param.speed]
-                if pos[1] >= 100 and pos[1] <= 150:
+                if y >= 100 and y <= 150:
                     # Проверяем что нам хватает очков
                     # для покупки ускорителя
                     score_and_speed = check_accelerators(param.accelerations,
                                                          "Schoolboy",
                                                          param.score,
                                                          param.speed)
-                if pos[1] >= 155 and pos[1] <= 205:
+                if y >= 155 and y <= 205:
                     score_and_speed = check_accelerators(param.accelerations,
                                                          "Teacher",
                                                          param.score,
                                                          param.speed)
-                if pos[1] >= 210 and pos[1] <= 260:
+                if y >= 210 and y <= 260:
                     score_and_speed = check_accelerators(param.accelerations,
                                                          "Director",
                                                          param.score,
                                                          param.speed)
-                if pos[1] >= 265 and pos[1] <= 315:
+                if y >= 265 and y <= 315:
                     score_and_speed = check_accelerators(param.accelerations,
                                                          "Einstein",
                                                          param.score,

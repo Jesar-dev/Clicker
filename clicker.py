@@ -18,8 +18,8 @@ param.score = 0
 clock = pygame.time.Clock()
 
 
-f1 = pygame.font.Font(None, 36)
-f2 = pygame.font.Font(None, 22)
+font1 = pygame.font.Font(None, 36)
+font2 = pygame.font.Font(None, 22)
 
 # Время для ускорителей
 time_elapsed_since_last_action = 0
@@ -51,13 +51,13 @@ while param.game_running:
         time_elapsed_since_last_action = 0
     pygame.display.update()
     # Создаём строки для очков и для скорости
-    Score = f1.render("Your score is: {0}".format(str(param.score)),
-                      True, (255, 255, 255))
-    Speed = f1.render("Your speed is: {0}".format(str(param.speed)),
-                      True, (255, 255, 255))
+    Score = font1.render("Your score is: {0}".format(str(param.score)),
+                         True, (255, 255, 255))
+    Speed = font1.render("Your speed is: {0}".format(str(param.speed)),
+                         True, (255, 255, 255))
 
     # Создаём прямоугольники с ускорителями
-    draw_all_accelerators(param.accelerations, f2, screen)
+    draw_all_accelerators(param.accelerations, font2, screen)
 
     # Рисуем на экране текст с очками и скоростью
     screen.blit(Score, (70, 50))
